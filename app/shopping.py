@@ -12,6 +12,28 @@ def format_usd(my_price):
     """
     return f"${my_price:,.2f}"
 
+def find_product(product_id):
+    """
+    Looks up products based on their id and finds relevant information
+
+    Params: product_id is an int that is within the range of given product id values
+
+    """
+    products_filepath = os.path.join(os.path.dirname(__file__), "..", "test", "mock_data", "mock_products.csv")
+    products_df = read_csv(products_filepath)
+    mock_products = products_df.to_dict("records")
+
+    test = []
+
+    matching_products = [p for p in mock_products if str(p["id"]) == str(product_id)]
+    if any(matching_products):
+        test.append(matching_products[0])
+        a = test[0]["aisle"]
+    else:
+        a = None
+
+    return a
+
 # Prevent all the application code from being imported
 # but still be able to run it from the command line is like this...
 
@@ -68,7 +90,7 @@ if __name__ == "__main__":
             receipt_file.write("\nSELECTED PRODUCT: " + p["name"] + "   " + format_usd(p["price"]))
 
         receipt_file.write("\n---------")
-        receipt_file.write(f"\nSUBTOTAL: {subtotal}")
+        receipt_file.write(f"\nSUBTOTAL: {format_usd(subtotal)}")
         receipt_file.write(f"\nTAX: {format_usd(subtotal * 0.0875)}")
         receipt_file.write(f"\nTOTAL: {format_usd(subtotal * 0.0875 + subtotal)}")
         receipt_file.write("\n---------")
