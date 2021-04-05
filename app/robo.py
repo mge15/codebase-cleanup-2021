@@ -20,7 +20,7 @@ def request_data(symbol):
     request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={API_KEY}"
     response = requests.get(request_url)
     return json.loads(response.text)
-  
+
 def process_data(parsed_response):
     """
     processes the data for the inputted stock symbol
@@ -51,6 +51,13 @@ def summarize_data(prices_df):
         "recent_low": prices_df["low"].min(),
     }
 
+def prepare_data_for_charting(prices_df):
+    """
+    Sorts the data by date ascending so that it can be properly charted
+    """
+    chart_df = prices_df.copy()
+    chart_df.sort_values(by="date", ascending=True, inplace=True)
+    return chart_df
 
 if __name__ == "__main__":
     # FETCH DATA
@@ -78,5 +85,7 @@ if __name__ == "__main__":
 
         # CHART PRICES OVER TIME
 
-        fig = px.line(df, y="close", title=f"Closing Prices for {symbol.upper()}") # see: https://plotly.com/python-api-reference/generated/plotly.express.line
+        chart_df = prepare_data_for_charting(df)
+        fig = px.line(chart_df, x="date", y="close", title=f"Closing Prices for {symbol.upper()}") # see: https://plotly.com/python-api-reference/generated/plotly.express.line
         fig.show()
+

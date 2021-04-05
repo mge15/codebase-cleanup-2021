@@ -1,16 +1,17 @@
 
 # TODO: import some code
 
-from conftest import mock_msft_response, mock_amzn_response  #, mock_error_response, mock_rate_limit_response
+from conftest import mock_msft_response, mock_amzn_response, mock_error_response, mock_rate_limit_response
 from pandas import DataFrame
-from app.robo import process_data, summarize_data
+from app.robo import process_data, summarize_data, prepare_data_for_charting
 
 # TODO: test the code
 
 # SKIP CI
 
 def test_request(parsed_googl_response):
-    # testing the request_data function indirectly through fixutre
+    # it should fetch data containing certain expected characteristics
+    # we are testing the request_data function indirectly
 
     response_keys = list(parsed_googl_response.keys())
     assert "Meta Data" in response_keys
@@ -28,8 +29,8 @@ def test_process(parsed_googl_response):
     assert len(googl_df) == 100
     assert list(googl_df.columns) == ["date", "open", "high", "low", "close", "volume"]
 
-    # it should gracefully handle response errors
-    assert process_data(parsed_oops_response) is None
+    # it should gracefully handle response errors:
+    assert process_data(mock_error_response) is None
 
 def test_summarize():
     assert summarize_data(process_data(mock_msft_response)) == {
@@ -42,3 +43,8 @@ def test_summarize():
         'recent_high': 3131.7843,
         'recent_low': 3030.05
     }
+
+def test_charting():
+    df = process_data(mock_amzn_response)
+    chart_df = prepare_data_for_charting(df)
+    assert chart_df["date"].tolist() == ['2030-03-10', '2030-03-11', '2030-03-12', '2030-03-15', '2030-03-16']
