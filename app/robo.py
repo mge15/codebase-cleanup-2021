@@ -59,7 +59,6 @@ def prepare_data_for_charting(prices_df):
     chart_df.sort_values(by="date", ascending=True, inplace=True)
     return chart_df
 
-
 if __name__ == "__main__":
     # FETCH DATA
 
@@ -89,3 +88,4 @@ if __name__ == "__main__":
         chart_df = prepare_data_for_charting(df)
         fig = px.line(chart_df, x="date", y="close", title=f"Closing Prices for {symbol.upper()}") # see: https://plotly.com/python-api-reference/generated/plotly.express.line
         fig.show()
+
