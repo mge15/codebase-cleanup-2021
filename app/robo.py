@@ -75,9 +75,9 @@ if __name__ == "__main__":
 
         summary = summarize_data(df)
 
-        print("LATEST CLOSING PRICE: ", summary["latest_close"])
-        print("RECENT HIGH: ", summary["recent_high"])
-        print("RECENT LOW: ", summary["recent_low"])
+        print("LATEST CLOSING PRICE: ", format_usd(summary["latest_close"]))
+        print("RECENT HIGH: ", format_usd(summary["recent_high"]))
+        print("RECENT LOW: ", format_usd(summary["recent_low"]))
 
         # EXPORT PRICES TO CSV
 
@@ -88,5 +88,5 @@ if __name__ == "__main__":
 
         chart_df = prepare_data_for_charting(df)
         fig = px.line(chart_df, x="date", y="close", title=f"Closing Prices for {symbol.upper()}") # see: https://plotly.com/python-api-reference/generated/plotly.express.line
+        fig.update_yaxes(tickprefix="$")
         fig.show()
-
