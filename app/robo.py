@@ -20,7 +20,7 @@ def request_data(symbol):
     request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={API_KEY}"
     response = requests.get(request_url)
     return json.loads(response.text)
-
+  
 def process_data(parsed_response):
     """
     processes the data for the inputted stock symbol
