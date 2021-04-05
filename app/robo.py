@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import requests
 from pandas import DataFrame
 import plotly.express as px
+from app.number_decorators import format_usd
 
 load_dotenv()
 
