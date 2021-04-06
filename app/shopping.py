@@ -3,27 +3,21 @@ from datetime import datetime
 from pandas import read_csv
 from app.number_decorators import format_usd
 
-def find_product(product_id):
+def find_product(product_id, all_products):
     """
     Looks up products based on their id and finds relevant information
 
-    Params: product_id is an int that is within the range of given product id values
+    Params:
+        product_id is a string that is within the range of given product id values
+        all_products is a list of dictionaries - each dictionary should have "id", "name", "department", "aisle", and "price" attributes
 
     """
-    products_filepath = os.path.join(os.path.dirname(__file__), "..", "test", "mock_data", "mock_products.csv")
-    products_df = read_csv(products_filepath)
-    mock_products = products_df.to_dict("records")
-
-    test = []
-
-    matching_products = [p for p in mock_products if str(p["id"]) == str(product_id)]
+    matching_products = [p for p in all_products if str(p["id"]) == str(product_id)]
     if any(matching_products):
-        test.append(matching_products[0])
-        a = test[0]["aisle"]
+        return matching_products[0]
     else:
-        a = None
+        return None
 
-    return a
 
 # Prevent all the application code from being imported
 # but still be able to run it from the command line is like this...
@@ -39,14 +33,15 @@ if __name__ == "__main__":
     # CAPTURE PRODUCT SELECTIONS
 
     selected_products = []
+
     while True:
         selected_id = input("Please select a product identifier: ")
         if selected_id.upper() == "DONE":
             break
         else:
-            matching_products = [p for p in products if str(p["id"]) == str(selected_id)]
-            if any(matching_products):
-                selected_products.append(matching_products[0])
+            matching_product = find_product(selected_id, products)
+            if matching_product:
+                selected_products.append(matching_product)
             else:
                 print("OOPS, Couldn't find that product. Please try again.")
 
